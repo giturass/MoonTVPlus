@@ -2930,6 +2930,14 @@ function PlayPageClient() {
 
     const extractEpisodeNumber = (title: string): number | null => {
       if (!title) return null;
+
+      // 优先匹配 Emby 格式：S01E01, S02E09 等
+      const embyMatch = title.match(/[Ss]\d+[Ee](\d+)/);
+      if (embyMatch) {
+        return parseInt(embyMatch[1], 10);
+      }
+
+      // 降级到原本的策略：纯数字或"第X集/话"格式
       const match = title.match(/^(\d+)$|第?\s*(\d+)\s*[集话話]?/);
       return match ? parseInt(match[1] || match[2], 10) : null;
     };
